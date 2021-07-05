@@ -55,7 +55,8 @@ app.use(express.json()); // parse json bodies
 // ROUTES
 ////////////////////////////////
 
-
+// Seed data with first set of users
+//==============================
 const seedData = require('./seedData.js');
 app.get('/seed', (req, res) => {
     User.deleteMany({}, (error, allUsers) => {})
@@ -65,16 +66,19 @@ app.get('/seed', (req, res) => {
     });
 });
 
-
-// create a test route
+//==============================
+// Home page route
+//==============================
 app.get("/", (req, res) => {
-    res.send("hello world");
+    res.send("Welcome to NGpadi!");
 });
 
-// PEOPLE INDEX ROUTE
+//==============================
+// USER INDEX ROUTE
+//==============================
 app.get("/user", async (req, res) => {
     try {
-        // send all people
+        // Return all in User
         res.json(await User.find({}));
     } catch (error) {
         //send error
@@ -82,7 +86,9 @@ app.get("/user", async (req, res) => {
     }
 });
 
+//==============================
 // PEOPLE CREATE ROUTE
+//==============================
 app.post("/user", async (req, res) => {
     try {
         // send all people
@@ -93,7 +99,35 @@ app.post("/user", async (req, res) => {
     }
 });
 
-///////////////////////////////
+//==============================
+// DELETE ROUTE FOR USERS
+//==============================
+app.delete("/user/:id", async (req, res) => {
+    try {
+      // send all people
+      res.json(await User.findByIdAndRemove(req.params.id));
+    } catch (error) {
+      //send error
+      res.status(400).json(error);
+    }
+  });
+  
+  //==============================
+  // UPDATE ROUTE FOR USERS
+  //==============================
+  app.put("/user/:id", async (req, res) => {
+    try {
+      // send all people
+      res.json(
+        await User.findByIdAndUpdate(req.params.id, req.body, { new: true })
+      );
+    } catch (error) {
+      //send error
+      res.status(400).json(error);
+    }
+  });
+
+//==============================
 // LISTENER
-////////////////////////////////
+//==============================
 app.listen(PORT, () => console.log(`listening on PORT ${PORT}`));
