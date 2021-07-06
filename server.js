@@ -24,6 +24,7 @@ mongoose.connect(DATABASE_URL, {
     useUnifiedTopology: true,
     useNewUrlParser: true,
 });
+
 // Connection Events
 mongoose.connection
     .on("open", () => console.log("You are connected to MongoDB"))
@@ -47,17 +48,17 @@ const User = mongoose.model("User", UserSchema);
 ///////////////////////////////
 // MiddleWare
 ////////////////////////////////
-app.use(cors()); // to prevent cors errors, open access to all origins
-app.use(morgan("dev")); // logging
+app.use(cors());
+app.use(morgan("dev"));
 app.use(express.json()); // parse json bodies
 
 ///////////////////////////////
 // ROUTES
 ////////////////////////////////
-
 // Seed data with first set of users
 //==============================
 const seedData = require('./seedData.js');
+
 app.get('/seed', (req, res) => {
     User.deleteMany({}, (error, allUsers) => {})
     User.create(seedData, (error, data) => {
@@ -91,11 +92,12 @@ app.get("/user", async (req, res) => {
 //==============================
 app.post("/user", async (req, res) => {
     try {
-        // send all people
-        res.json(await User.create(req.body));
+        let user = await User.create(req.body);
+        res.json(user);
     } catch (error) {
         //send error
-        res.status(400).json(error);
+        res.send("THERE WAS AN ERROR!");
+        //res.status(400).json(error);
     }
 });
 
