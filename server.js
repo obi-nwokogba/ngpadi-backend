@@ -1,6 +1,6 @@
-///////////////////////////////
+
 // DEPENDENCIES
-////////////////////////////////
+//====================================
 // get .env variables
 require("dotenv").config();
 // pull PORT from .env, give default value of 4000
@@ -16,9 +16,9 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const morgan = require("morgan");
 
-///////////////////////////////
+//====================================
 // DATABASE CONNECTION
-////////////////////////////////
+//====================================
 // Establish Connection
 mongoose.connect(DATABASE_URL, {
     useUnifiedTopology: true,
@@ -31,9 +31,9 @@ mongoose.connection
     .on("close", () => console.log("You are disconnected from MongoDB"))
     .on("error", (error) => console.log(error));
 
-///////////////////////////////
+//====================================
 // MODELS
-////////////////////////////////
+//====================================
 const UserSchema = new mongoose.Schema({
     displayname: String,
     email: String,
@@ -42,21 +42,31 @@ const UserSchema = new mongoose.Schema({
     profilepicurl: String,
     timejoined: String
 });
-
 const User = mongoose.model("User", UserSchema);
 
-///////////////////////////////
+const PostSchema = new mongoose.Schema({
+    displayname: String,
+    email: String,
+    location: String,
+    status: String,
+    profilepicurl: String,
+    timejoined: String
+});
+const Post = mongoose.model("Post", PostSchema);
+
+//====================================
 // MiddleWare
-////////////////////////////////
+//====================================
 app.use(cors());
 app.use(morgan("dev"));
-app.use(express.json()); // parse json bodies
+app.use(express.json());
 
-///////////////////////////////
+
 // ROUTES
-////////////////////////////////
+
+//====================================
 // Seed data with first set of users
-//==============================
+//====================================
 const seedData = require('./seedData.js');
 
 app.get('/seed', (req, res) => {
@@ -88,7 +98,7 @@ app.get("/user", async (req, res) => {
 });
 
 //==============================
-// PEOPLE CREATE ROUTE
+// USER CREATE ROUTE
 //==============================
 app.post("/user", async (req, res) => {
     try {
